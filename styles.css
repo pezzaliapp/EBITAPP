@@ -1,0 +1,65 @@
+:root{
+  --bg:#0f172a;      /* slate-900 */
+  --card:#111827;    /* slate-800 */
+  --ink:#e5e7eb;     /* gray-200 */
+  --muted:#9ca3af;   /* gray-400 */
+  --accent:#22c55e;  /* green-500 */
+  --danger:#ef4444;  /* red-500 */
+  --line:#1f2937;    /* slate-700 */
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color:var(--ink);
+  background: linear-gradient(180deg, var(--bg), #0b1225);
+}
+header{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:1rem;
+  border-bottom:1px solid var(--line);
+  position:sticky; top:0; backdrop-filter: blur(6px);
+  background: rgba(15,23,42,.8);
+}
+header img{width:32px;height:32px}
+h1{font-size:1.1rem;margin:0}
+main{max-width:980px;margin:0 auto;padding:1rem;display:grid;gap:1rem}
+.card{
+  background:linear-gradient(180deg, #0f172a, #101828);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:1rem;
+}
+.grid{display:grid;gap:1rem}
+.controls{display:flex;flex-wrap:wrap;gap:.5rem}
+button, select, input[type="file"]::file-selector-button{
+  appearance:none;border:1px solid var(--line);background:#0f172a;color:var(--ink);
+  padding:.5rem .75rem;border-radius:10px;cursor:pointer
+}
+button.primary{background:var(--accent);color:#052e13;border:none}
+button.danger{background:var(--danger);color:#fff;border:none}
+button:disabled{opacity:.6;cursor:not-allowed}
+select, input[type="text"]{padding:.5rem .75rem;background:#0f172a;border-radius:10px;border:1px solid var(--line);color:var(--ink)}
+label{display:grid;gap:.35rem}
+.input-row{display:grid;grid-template-columns:1fr 140px; gap:.75rem; align-items:end}
+@media (max-width:640px){.input-row{grid-template-columns:1fr}}
+small{color:var(--muted)}
+hr{border:0; height:1px; background: var(--line); margin: .5rem 0 1rem}
+.kpi{display:grid;grid-template-columns:repeat(3, 1fr); gap:.75rem}
+.kpi .box{padding:1rem;border:1px solid var(--line);border-radius:12px;background:#0c1327;text-align:center}
+.kpi .value{font-size:1.35rem;font-weight:700}
+.kpi .sub{color:var(--muted);font-size:.9rem}
+.progress{height:8px;background: #0a1225; border-radius:999px; overflow:hidden}
+.progress > div{height:8px;background:var(--accent); width:0%}
+.footer-note{color:var(--muted);font-size:.85rem}
+.table{width:100%; border-collapse: collapse}
+.table th,.table td{border-bottom:1px dashed var(--line); padding:.5rem .25rem}
+.table th{color:var(--muted); font-weight:600; text-align:left}
+.toast{
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+  background: #0b142a; border: 1px solid var(--line); padding: .6rem .9rem; border-radius: 10px;
+  display:none;
+}

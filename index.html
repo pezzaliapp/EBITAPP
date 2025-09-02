@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EBITAPP — Calcolo EBIT & EBITDA</title>
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="PWA locale per calcolare EBITDA, EBIT e margini. Salva scenari in locale. Open source.">
+</head>
+<body>
+  <header>
+    <img src="icons/icon-192.png" alt="EBITAPP logo">
+    <h1>EBITAPP — Calcolo EBIT & EBITDA</h1>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <div class="controls" style="justify-content: space-between; gap: .75rem">
+        <div class="controls" style="gap:.5rem">
+          <button id="newBtn">Nuovo</button>
+          <button id="saveBtn" class="primary">Salva</button>
+          <button id="dupBtn">Duplica</button>
+          <button id="delBtn" class="danger">Elimina</button>
+        </div>
+        <div class="controls" style="gap:.5rem">
+          <select id="scenarioSel" title="Scenari salvati"></select>
+          <input id="scenarioName" type="text" placeholder="Nome scenario (es. Budget 2025)" style="min-width:220px">
+        </div>
+        <div class="controls" style="gap:.5rem">
+          <button id="exportBtn">Esporta</button>
+          <button id="importBtn">Importa</button>
+          <input id="importFile" type="file" accept=".json,application/json" style="display:none">
+          <button id="resetBtn">Ripristina esempio</button>
+          <button id="checkBtn">Check</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0">Dati di input</h2>
+      <div class="grid">
+        <div class="input-row">
+          <label>Ricavi (vendite) <small>Totale ricavi</small>
+            <input id="ricavi" class="calc" type="number" step="0.01" placeholder="es. 1000000">
+          </label>
+          <label>Valuta e decimali
+            <div class="controls">
+              <input id="valuta" type="text" value="€" style="width:70px">
+              <input id="decimali" type="number" min="0" max="4" value="0" style="width:90px">
+            </div>
+          </label>
+        </div>
+
+        <div class="input-row">
+          <label>Costo del venduto (COGS) <small>Materie, manodopera diretta...</small>
+            <input id="cogs" class="calc" type="number" step="0.01" placeholder="es. 600000">
+          </label>
+          <label>Spese SG&A <small>Commerciali, generali, amministrative</small>
+            <input id="sga" class="calc" type="number" step="0.01" placeholder="es. 200000">
+          </label>
+        </div>
+
+        <div class="input-row">
+          <label>Ammortamenti (e svalutazioni) <small>Inclusi nel conto economico</small>
+            <input id="ammortamenti" class="calc" type="number" step="0.01" placeholder="es. 50000">
+          </label>
+          <label>Altri proventi operativi <small>+ se proventi</small>
+            <input id="altriProventiOp" class="calc" type="number" step="0.01" placeholder="es. 0">
+          </label>
+        </div>
+
+        <div class="input-row">
+          <label>Altri costi operativi <small>+ se costi</small>
+            <input id="altriCostiOp" class="calc" type="number" step="0.01" placeholder="es. 0">
+          </label>
+          <label>Oneri finanziari (netti) <small>+ se costo, - se provento</small>
+            <input id="oneriFin" class="calc" type="number" step="0.01" placeholder="es. 30000">
+          </label>
+        </div>
+
+        <div class="input-row">
+          <label>Imposte sul reddito <small>Totale periodo</small>
+            <input id="imposte" class="calc" type="number" step="0.01" placeholder="es. 24000">
+          </label>
+          <label>Note scenario
+            <input id="note" type="text" placeholder="Annotazioni libere">
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0">Risultati</h2>
+      <table class="table">
+        <thead><tr><th>Indicatore</th><th>Valore</th><th>% su Ricavi</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>EBITDA</strong> <small>(Ricavi + Proventi op. − COGS − SG&A − Altri costi op.)</small></td>
+            <td class="value" id="ebitda">—</td>
+            <td><span id="ebitdaPct">—</span><div class="progress"><div id="barEbitda"></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>EBIT</strong> <small>(EBITDA − Ammortamenti)</small></td>
+            <td class="value" id="ebit">—</td>
+            <td><span id="ebitPct">—</span><div class="progress"><div id="barEbit"></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Utile Netto</strong> <small>(EBIT − Oneri fin. − Imposte)</small></td>
+            <td class="value" id="utile">—</td>
+            <td><span id="utilePct">—</span><div class="progress"><div id="barUtile"></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="footer-note">
+        Suggerimento: inserisci <em>Oneri finanziari</em> come numero positivo se sono un costo; usa numeri negativi per proventi netti.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0">Cos'è l'EBIT?</h2>
+      <p>
+        L’<strong>EBIT</strong> (Earnings Before Interest and Taxes) misura il risultato operativo dell’azienda
+        prima di interessi e imposte. È utile per confrontare la redditività indipendentemente da come è
+        finanziata l’impresa. L’<strong>EBITDA</strong> aggiunge indietro ammortamenti e svalutazioni per evidenziare
+        la generazione di cassa operativa prima degli investimenti non monetari.
+      </p>
+      <p class="footer-note">PWA locale: funziona offline, i dati restano sul tuo dispositivo (localStorage).</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast">Ok</div>
+  <script src="script.js"></script>
+</body>
+</html>
